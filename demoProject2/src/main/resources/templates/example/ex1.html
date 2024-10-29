@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<!-- th 속성 추가 네임스페이스 선언 -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>타임리프 예제1</title>
+
+  <style>
+    .price { color: red; }
+  </style>
+</head>
+<body>
+  <h1>타임리프 예제 1</h1>
+
+  <pre>
+    Spring EL(스프링 표현 언어)
+    - ${key} : 변수, Model 등을 이용해서 세팅한 값 출력
+
+    th:text 속성 = "속성값"
+    - 타임리프를 이용해서
+      속성 값을 작성된 태그의 내용(innerText)으로 출력
+
+      ** th 속성은 출력된 화면에서 보여지지 않는다! **
+      -> 해석된 후 사라짐
+  </pre>
+  
+  <h4 th:text="${test1}">test1 값</h4>
+  <h4 th:text="${test2}">test2 값</h4>
+
+
+  <hr>
+
+  <h3>단일 값 출력</h3>
+
+  <pre>
+    th:block 태그 
+    - 타임리프에서 제공하는 유일한 태그
+
+    - 타임리프는 일반 html 태그 내에 th 속성을 작성하여 정의하는게 일반적이지만
+      th 속성을 작성할 html 태그가 마땅히 존재하지 않을 때 사용
+
+    - 조건문, 반복문과 같이 사용하는 경우가 많음
+
+    - 해석되고 태그는 사라짐
+  </pre>
+
+  productName : <th:block th:text="${productName}">상품명</th:block>
+                <!-- th:block은 텍스트만 해석되고 태그는 사라짐 -->
+              / <span th:text="${productName}">상품명</span>
+
+
+  <br>
+
+  price :
+  <span class="price">
+    <th:block th:text="${price}">가격</th:block> 원
+  </span>
+
+  <hr>
+
+  <h3>복수 값 출력</h3>
+  <pre>
+    List 와 같은 복수 값 출력하는 방법
+    - 1) 인덱스번호로 요소 하나하나 접근해서 출력
+    - 2) th:each="item : ${List 또는 배열}"
+      -> 향상된 for문 형태
+      -> List 또는 배열 길이 만큼 반복
+      -> 매 반복 시 마다 List 또는 배열의 요소를 차례대로 꺼내
+         item 변수에 저장 (item 변수명은 자유롭게 작성)
+  </pre>
+
+  <ul>
+    <li th:text="${fruitList}">과일목록</li> <!-- [사과, 딸기, 바나나] -->
+
+    <!-- List 여도 요소를 꺼내는 방식은 배열 표기법으로 사용할 수 있음 -->
+    <li th:text="${fruitList[0]}">0번 인덱스 과일</li>
+    <li th:text="${fruitList[1]}">1번 인덱스 과일</li>
+    <li th:text="${fruitList[2]}">2번 인덱스 과일</li>
+  </ul>
+
+  <hr>
+
+  <h4>th:each 사용</h4>
+  <ul>
+    <th:block th:each="fruit : ${fruitList}">
+      <li th:text="${fruit}">과일명</li>
+    </th:block>    
+  </ul>
+
+  <hr>
+
+  <h3>DTO 객체 출력</h3>
+
+  <ul>
+    <li th:text="${std}">std 객체</li>
+    <li th:text="${std.studentNo}">학번</li>
+    <li th:text="${std.name}">이름</li>
+    <li th:text="${std.age}">나이</li>
+  </ul>
+
+  <hr>
+
+  <pre>
+    th:object 속성 +   *{필드명}
+
+    - th:object 속성 : 해당 태그 내에서 
+      지정된 객체의 필드를 쉽게 접근할 수 있게 해주는 속성
+
+    - *{} : th:object로 지정된 객체의 필드에 접근할 때 사용하는 작성법
+  </pre>
+
+  <h4>th:object 사용</h4>
+
+  <ul th:object="${std}">
+    <li th:text="*{studentNo}">학번</li>
+    <li th:text="*{name}">이름</li>
+    <li th:text="*{age}">나이</li>
+  </ul>
+
+  <hr>
+
+  <h3>DTO가 담긴 List 출력하기</h3>
+  
+  <table border="1">
+    <thead>
+      <tr>
+        <th>학번</th>
+        <th>이름</th>
+        <th>나이</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <!-- th:each가 설정된 태그부터 반복(tr 반복된다) -->
+      <tr th:each="std : ${stdList}" th:object="${std}">
+        <td th:text="*{studentNo}">학번</td>
+        <td th:text="*{name}">이름</td>
+        <td th:text="*{age}">나이</td>
+      </tr>
+    </tbody>
+
+  </table>
+
+
+  <th:block th:replace="~{fragments/footer}"></th:block>
+</body>
+</html>

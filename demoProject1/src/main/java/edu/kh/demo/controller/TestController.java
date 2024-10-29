@@ -28,6 +28,7 @@ public class TestController {
 	// - GET/POST 가리지 않고 매핑 (속성을 통해서 지정 가능 or 다른 어노테이션을 이용해서 가능)
 	
 	/*
+	@RequestMapping("/hello")
 	@RequestMapping(value="/hello", method=RequestMethod.POST)
 	public String hello() {
 		// 메서드 로직
