@@ -1,0 +1,18 @@
+<!-- 
+  fragment : 조각
+  - html 요소를 다른 html 파일에서 재사용 가능하게 함
+-->
+
+<div th:fragment="nav">
+  <ul>
+    <li><a href="#">공지사항</a></li>
+    <li><a href="#">자유게시판</a></li>
+    <li><a href="#">질문게시판</a></li>
+    <li><a href="#">FAQ</a></li>
+    <li><a href="#">1:1문의</a></li>
+    <li><a href="#">채팅</a></li>
+  </ul>
+</div>
+
+<h1 th:fragment="temp2" style="background-color: yellow; color: red;">
+  타임리프 Fragment 확인 중</h1>
