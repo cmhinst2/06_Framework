@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TodoList - Boot</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <h1>Todo List</h1>
+
+  <p th:text="${testTitle}">todoNo가 1인 할 일 제목 조회</p>
+
+  <form action="/todo/add" method="POST">
+    <h4>할 일 추가</h4>
+    <div>
+      제목 : <input type="text" name="todoTitle">
+    </div>
+    <div>
+      <textarea name="todoContent" cols="50" rows="5" placeholder="상세 내용"></textarea>
+    </div>
+    <button>추가 하기</button>
+  </form>
+
+  <hr>
+
+  <!-- ${#lists.size(todoList)} -->
+  <h3 th:text="|전체 Todo 개수 : ${#lists.size(todoList)}개 
+    / 완료된 Todo 개수 : ${completeCount}개|">내용</h3>
+
+  <table border="1" style="border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th>행 번호</th>
+        <th>할 일 번호</th>
+        <th>할 일 제목</th>
+        <th>완료 여부</th>
+        <th>등록 날짜</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <!-- 반복 상태 변수 (현재 반복중인 객체와 반복 정보를 저장중인 타임리프 변수)
+          변수명은 자유지만 보통 iterStat 
+          
+          작성법
+          th:each="todo, iterStat : ${todoList}"
+      -->
+      <tr th:each="todo, iterStat : ${todoList}" th:object="${todo}">
+         <!-- <p th:text="${iterStat}"></p> -->
+        <td th:text="${iterStat.count}">행 번호</td>
+        <td th:text="*{todoNo}">할 일 번호</td>
+        <td>
+          <a href="#"
+            th:text="*{todoTitle}">할 일 제목</a>
+        </td>
+        <td th:text="*{complete}">완료 여부(Y/N)</td>
+        <td th:text="*{regDate}">등록일</td>
+      </tr>
+    </tbody>
+  </table>
+
+  
+  <!-- 공통 푸터 내용 -->
+   <!-- footer.html 조각을 해당 위치에 추가 -->
+  <th:block th:replace="~{common/footer}"></th:block>
+</body>
+</html>
