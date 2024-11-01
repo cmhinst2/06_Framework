@@ -51,7 +51,7 @@
         <td th:text="${iterStat.count}">행 번호</td>
         <td th:text="*{todoNo}">할 일 번호</td>
         <td>
-          <a href="#"
+          <a th:href="@{/todo/detail(todoNo=*{todoNo})}"
             th:text="*{todoTitle}">할 일 제목</a>
         </td>
         <td th:text="*{complete}">완료 여부(Y/N)</td>

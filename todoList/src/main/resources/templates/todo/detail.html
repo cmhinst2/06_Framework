@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${todo.todoTitle}">할 일 제목</title>
+  
+  <link rel="stylesheet" href="/css/detail.css">
+</head>
+<body>
+  <h3 th:text="${todo.todoTitle}">할 일 제목</h3>
+
+  <table>
+    <tr>
+      <th>번호</th>
+      <td th:text="${todo.todoNo}">할 일 번호</td>
+    </tr>
+    <tr>
+      <th>등록 날짜</th>
+      <td>[[${todo.regDate}]]</td>
+    </tr>
+    <tr>
+      <th>완료 여부</th>
+      <td>
+        <!-- data-* 속성
+          - 데이터에 대한 확장성을 고려하여 설계된 속성
+          - js에서 요소.dataset 을 이용해 해당 값을 얻어와 사용할 수 있음
+        -->
+        <button
+          th:data-todo-no="${todo.todoNo}"
+          th:text="${todo.complete}"
+          type="button" 
+          class="complete-btn"
+        >완료 여부</button>
+      </td>
+    </tr>
+    <tr>
+      <th>내용</th>
+      <td class="todo-content" th:text="${todo.todoContent}">할 일 내용</td>
+    </tr>
+  </table>
+
+  <button id="goToList">목록으로</button>
+  <button id="updateBtn">수정</button>
+  <button id="deleteBtn">삭제</button>
+
+  <!-- footer.html 조각을 해당 위치에 넣기
+      조각의 경로는 forward 하듯이 경로 작성 (접두사, 접미사 생략) 
+  -->
+
+  <th:block th:replace="~{common/footer}"></th:block>
+
+  <!-- Spring 에서 정적자원 (css,js.. ) 요청 시 static 폴더 기준으로 경로 작성! -->
+  <script src="/js/detail.js"></script>
+</body>
+</html>

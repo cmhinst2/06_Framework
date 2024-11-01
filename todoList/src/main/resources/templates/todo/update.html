@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>할 일 수정</title>
+  <link rel="stylesheet" href="/css/update.css">
+</head>
+<body>
+  
+  <h1>할 일 수정</h1>
+  <hr>
+
+  <form action="/todo/update" method="POST">
+    <div class="form-group">
+      <label for="todoTitle">제목 :</label>
+      <input type="text" id="todoTitle" name="todoTitle" placeholder="제목 입력">
+    </div>
+
+    <div class="form-group">
+      <label for="todoContent">내용 :</label>
+      <textarea id="todoContent" name="todoContent" cols="50" rows="5" placeholder="상세 내용"></textarea>
+    </div>
+
+    <!-- 할 일 번호를 숨겨둠 -->
+    <input type="hidden" name="todoNo">
+
+    <button type="submit" class="btn">수정하기</button>
+  </form>
+
+  <footer>footer 조각으로 대체</footer>
+
+</body>
+</html>
