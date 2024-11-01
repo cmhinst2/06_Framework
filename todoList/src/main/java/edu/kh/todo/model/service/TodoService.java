@@ -36,7 +36,18 @@ public interface TodoService {
 	int changeComplete(Todo todo);
 	
 	
-	
+
+	/** 할 일 삭제
+	 * @param todoNo
+	 * @return result
+	 */
+	int todoDelete(int todoNo);
+
+	/** 할 일 수정
+	 * @param todo
+	 * @return result
+	 */
+	int todoUpdate(Todo todo);
 	
 	
 	

@@ -2,33 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>할 일 수정</title>
+  <meta name="viewport" content="width=], initial-scale=1.0">
+
+  <title th:text="|${todo.todoNo}번 할 일 수정|"></title>
   <link rel="stylesheet" href="/css/update.css">
 </head>
 <body>
   
-  <h1>할 일 수정</h1>
+  <h1 th:text="|${todo.todoNo}번 할 일 수정|"></h1>
   <hr>
 
   <form action="/todo/update" method="POST">
-    <div class="form-group">
-      <label for="todoTitle">제목 :</label>
-      <input type="text" id="todoTitle" name="todoTitle" placeholder="제목 입력">
+    <div>
+      제목 : <input type="text" name="todoTitle" th:value="${todo.todoTitle}">
     </div>
 
-    <div class="form-group">
-      <label for="todoContent">내용 :</label>
-      <textarea id="todoContent" name="todoContent" cols="50" rows="5" placeholder="상세 내용"></textarea>
+
+    <div>
+      <!-- 
+        textarea에 값을 세팅하고 싶으면 시작, 종료 태그 사이에 작성!
+      
+        textarea는 
+        white-space : pre-wrap;  으로 설정되어 있어
+        시작, 종료 태그 사이 공백이 모두 인식된다!
+        -> 특정 값만 작성해 놓고 싶으면, 
+        시작, 종료 태그 사이에 공백없이 작성해라!
+      -->
+      <textarea name="todoContent" 
+        cols="50" rows="5" placeholder="상세 내용"
+        th:text="${todo.todoContent}">
+      </textarea>
     </div>
 
     <!-- 할 일 번호를 숨겨둠 -->
-    <input type="hidden" name="todoNo">
+    <input type="hidden" name="todoNo" th:value="${param.todoNo}">
 
-    <button type="submit" class="btn">수정하기</button>
+    <button>수정하기</button>
   </form>
 
-  <footer>footer 조각으로 대체</footer>
+  <th:block th:replace="~{common/footer}">footer 조각으로 대체</th:block>
 
 </body>
 </html>

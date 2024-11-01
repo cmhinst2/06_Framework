@@ -112,7 +112,19 @@
   		WHERE TODO_NO = #{todoNo}
   	</update>
   	
-  	
+  	<!-- 할 일 삭제 -->
+  	<delete id="todoDelete" parameterType="_int">
+  		DELETE FROM TB_TODO
+  		WHERE TODO_NO = #{todoNo} 
+  	</delete>
+  		
+  	<!-- 할 일 수정 -->
+  	<update id="todoUpdate" parameterType="Todo">
+  		UPDATE TB_TODO SET
+  		TODO_TITLE = #{todoTitle},
+  		TODO_CONTENT = #{todoContent}
+  		WHERE TODO_NO = #{todoNo}
+ 	</update>
   	
   	
   	
