@@ -71,12 +71,12 @@ SELECT '같음' FROM DUAL
 WHERE 1 = '1';
 
 
+SELECT COUNT(*) FROM TB_TODO;
 
 
-
-
-
-
+SELECT COUNT(*) 
+		FROM TB_TODO
+		WHERE COMPLETE = 'Y';
 
 
 
