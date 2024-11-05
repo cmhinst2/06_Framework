@@ -166,6 +166,16 @@ public class AjaxController {
 	}
 	
 	
+	// 할 일 수정
+	@ResponseBody
+	@PutMapping("update")
+	public int todoUpdate(@RequestBody Todo todo) {
+		return service.todoUpdate(todo);
+	}
+	
+	
+	
+	
 	
 	
 	

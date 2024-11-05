@@ -442,6 +442,75 @@ updateView.addEventListener("click", () => {
   //<button id="updateBtn" data-todo-no=${todoNo}>수정</button> 
 });
 
+// -----------------------------------------------------
+
+// 수정 레이어에서 취소버튼(#updateCancel)이 클릭되었을 때
+updateCancel.addEventListener("click", () => {
+
+  // 수정 레이어 숨기기
+  updateLayer.classList.add("popup-hidden");
+
+  // 상세 조회 팝업 레이어를 보이기
+  popupLayer.classList.remove("popup-hidden");
+
+});
+
+// ------------------------------------------------------
+
+// 수정 레이어 -> 수정 버튼(#updateBtn) 클릭 시
+updateBtn.addEventListener("click", e => {
+
+  // 서버로 전달해야되는 값을 객체로 묶어둠
+  const obj = {
+    "todoNo"      : e.target.dataset.todoNo,
+    "todoTitle"   : updateTitle.value,
+    "todoContent" : updateContent.value
+  };
+
+  //console.log(obj);
+
+  // 비동기 요청 (PUT)
+  fetch("/ajax/update", {
+    method : "PUT",
+    headers : {"Content-Type" : "application/json"},
+    body : JSON.stringify(obj)
+  })
+  .then( resp => resp.text() )
+  .then( result => {
+
+    if(result > 0) {
+      alert("수정 성공!");
+
+      // 수정 레이어 숨기기
+      updateLayer.classList.add("popup-hidden");
+
+      // 상세 조회 레이어는 보이게
+      // -> 수정한 내용이 출력되도록
+      // selectTodo();
+      // -> 성능 개선
+      popupTodoTitle.innerText = updateTitle.value;
+
+      popupTodoContent.innerHTML 
+        = updateContent.value.replaceAll("\n", "<br>");
+
+      popupLayer.classList.remove("popup-hidden");
+
+      selectTodoList(); // 목록 다시 조회
+
+      updateTitle.value = "";   // 제목 input 남은 흔적 제거
+      updateContent.value = ""; // 내용 textarea 남은 흔적 제거
+      updateBtn.removeAttribute("data-todo-no"); // 속성제거
+
+
+
+    } else {
+      alert("수정 실패..ㅜㅜ");
+    }
+
+  });
+  
+});
+
 
 
 
