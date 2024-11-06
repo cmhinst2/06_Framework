@@ -6,11 +6,11 @@ const loginEmail = document.querySelector("#loginForm input[name='memberEmail']"
 const loginPw = document.querySelector("#loginForm input[name='memberPw']"); // 비밀번호 input 태그
 
 // #loginForm 이 화면에 존재할 때 (== 로그인 상태 아닐 때)
-// -> 타임리프에 의해 로그인 되었다면 #loginForm 요소는 화면에 노출되지 않음
+// -> 로그인 되었다면 타임리프에 의해  #loginForm 요소는 화면에 노출되지 않음
 // -> 로그인 상태일 때 loginForm 을 이용한 코드가 수행된다면
 // -> 콘솔창에 error 발생 
 
-if(loginForm != null) {
+if(loginForm != null) { // 로그인 안된 상태일때 
 
   // 제출 이벤트 발생 시 
   loginForm.addEventListener("submit", e => {

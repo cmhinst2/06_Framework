@@ -55,7 +55,7 @@
 
             <article class="signup-find-area">
 
-              <a href="#">회원가입</a>
+              <a href="/member/signup">회원가입</a>
 
               <span> | </span>
               <a href="#">ID/PW 찾기</a>
@@ -70,20 +70,30 @@
 
           <article class="login-area">
 
-            <a href="#">
+            <a href="/myPage/profile">
               <!-- 프로필 이미지 -->
-              <img src="/images/user.png" id="memberProfile" alt="프로필 이미지">
+			  <!--
+				messages.properties에 작성된 기본 사용자 이미지
+				-> session.loginMember.profileImg에 유저가 등록한 이미가 있다면 (null 이 아니라면)
+					session.loginMember.profileImg에 저장된 이미지 경로를 사용하겠다.
+					없다면(null 이라면) /images/user.png(messages.properties에 등록) 사용  
+			-->
+			  
+              <img th:with="user=#{user.default.image}"
+			  		th:src="${session.loginMember.profileImg ?: user}" 
+			  		id="memberProfile" 
+			  		alt="프로필 이미지">
             </a>
 
             <!-- 닉네임, 이메일, 로그아웃 버튼 영역 -->
-            <div class="my-info">
+            <div class="my-info" th:object="${session.loginMember}">
 
-              <div>
-                <a href="#" id="nickname">닉네임</a>
-                <a href="#" id="logoutBtn">로그아웃</a>
+              <div> <!-- th:text=${session.loginMember.memberNickname}-->
+                <a href="/myPage/info" id="nickname" th:text="*{memberNickname}">닉네임</a>
+                <a href="/member/logout" id="logoutBtn">로그아웃</a>
               </div>
 
-              <p>이메일</p>
+              <p th:text="*{memberEmail}">이메일</p>
 
             </div>
 
