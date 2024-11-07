@@ -21,6 +21,13 @@
 	</insert>
 	
 	
+	<!-- 이메일 + 인증번호 확인 -->
+	<select id="checkAuthKey" resultType="_int">
+		SELECT COUNT(*)
+		FROM "TB_AUTH_KEY"
+		WHERE EMAIL = #{email}
+		AND AUTH_KEY = #{authKey}
+	</select>
 	
 	
 	

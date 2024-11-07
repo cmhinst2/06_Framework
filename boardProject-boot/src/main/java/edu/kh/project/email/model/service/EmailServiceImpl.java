@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -62,14 +63,23 @@ public class EmailServiceImpl implements EmailService{
 			// 메일 기본 정보 설정
 			helper.setTo(email); // 받는 사람(수신자)
 			helper.setSubject("[boardProject] 회원 가입 인증번호 입니다."); // 제목
-			helper.setText( loadHtml(authKey, htmlName) ); // HTML 내용 설정
- 		
+			helper.setText( loadHtml(authKey, htmlName) , true ); // HTML 내용 설정
+			// 인증번호입니다 : ag2dcd 
+			// helper.setText( "인증번호입니다 : " +  authKey );
+			
+			// 메일에 이미지 첨부(로고)
+			helper.addInline("logo", new ClassPathResource("static/images/logo.jpg"));
+			
+			// 실제 메일 발송
+			mailSender.send(mimeMessage);
+			
+			return authKey; // 모든 작업 성공 시 인증키 반환
 		
 		} catch (MessagingException e) {
 			e.printStackTrace();
+			return null; // 메일 발송 실패 시 null 반환
 		}
 		
-		return null;
 	}
 
 	// HTML 템플릿에 데이터를 바인딩하여 최종 HTML 생성
@@ -108,8 +118,11 @@ public class EmailServiceImpl implements EmailService{
 		return UUID.randomUUID().toString().substring(0, 6);
 	}
 
-
-
+	// 입력받은 이메일, 인증번호가 DB에 있는지 조회
+	@Override
+	public int checkAuthKey(Map<String, String> map) {
+		return mapper.checkAuthKey(map);
+	}
 
 
 

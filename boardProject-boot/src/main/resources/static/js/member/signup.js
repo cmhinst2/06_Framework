@@ -241,7 +241,31 @@ checkAuthKeyBtn.addEventListener("click", () => {
     };
 
 	// 인증번호 확인용 비동기 요청 보냄
-  
+    fetch("/email/checkAuthKey", {
+        method : "POST",
+        headers : {"Content-Type" : "application/json"},
+        body : JSON.stringify(obj) // obj JS 객체를 JSON 으로 변경
+    })
+    .then( resp => resp.text() )
+    .then( result => {
+        // 1 or 0
+
+        if(result == 0) {
+            alert("인증번호가 일치하지 않습니다!");
+            checkObj.authKey = false;
+            return;
+        }
+
+        // 일치할 때
+        clearInterval(authTimer); // 타이머 멈춤
+
+        authKeyMessage.innerText = "인증 되었습니다.";
+        authKeyMessage.classList.remove("error");
+        authKeyMessage.classList.add("confirm");
+
+        checkObj.authKey = true; // 인증번호 검사여부 true 변경
+    });
+
 });
 
 
