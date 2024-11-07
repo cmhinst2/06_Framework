@@ -55,6 +55,35 @@ COMMIT;
 
 SELECT * FROM "MEMBER";
 
+
+-- 회원 1번 유저일 암호화된 비밀번호로 업데이트(pass01!)
+UPDATE "MEMBER" SET
+MEMBER_PW = '$2a$10$mQuTt31FyF3uXL2qAkF21eZsPnoQP6zeo9pKCevmsWtGJEOsKtFhu'
+WHERE MEMBER_NO = 1;
+
+COMMIT;
+
+-- 로그인
+SELECT MEMBER_NO, MEMBER_EMAIL, MEMBER_NICKNAME, MEMBER_PW,
+MEMBER_TEL, MEMBER_ADDRESS, PROFILE_IMG, AUTHORITY,
+TO_CHAR(ENROLL_DATE, 'YYYY"년" MM"월" DD"일" HH24"시" MI"분" SS"초"') ENROLL_DATE
+FROM "MEMBER"
+WHERE MEMBER_EMAIL = 'user01@kh.or.kr'
+AND MEMBER_DEL_FL = 'N';
+
+
+-- 이메일 중복 검사
+SELECT COUNT(*)
+FROM "MEMBER"
+WHERE MEMBER_DEL_FL = 'N'
+AND MEMBER_EMAIL = 'user02@kh.or.kr';
+-- 0이 조회 : 중복 X (해당 이메일 사용중인 회원 없음) -> 이용 가능
+-- 1이 조회 : 중복 O (해당 이메일 사용중인 회원 있음) -> 이용 불가능
+
+
+
+
+
 -----------------------------------------
 
 /* 이메일, 인증키 저장 테이블 생성 */
