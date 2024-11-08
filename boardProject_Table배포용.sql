@@ -81,6 +81,8 @@ AND MEMBER_EMAIL = 'user02@kh.or.kr';
 -- 1이 조회 : 중복 O (해당 이메일 사용중인 회원 있음) -> 이용 불가능
 
 
+-- 닉네임 중복검사
+
 
 
 
@@ -130,7 +132,7 @@ COMMENT ON COLUMN "UPLOAD_FILE"."FILE_UPLOAD_DATE" IS '업로드 날짜';
 
 COMMENT ON COLUMN "UPLOAD_FILE"."MEMBER_NO" IS '업로드한 회원 번호';
 
-
+SELECT * FROM UPLOAD_FILE;
 ------------------------------------------
 
 /* 게시판 테이블 생성 */

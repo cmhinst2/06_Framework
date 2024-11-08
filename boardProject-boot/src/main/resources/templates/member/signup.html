@@ -97,17 +97,20 @@
         <label for="memberAddress">주소</label>
 
         <div class="signUp-input-area">
-          <input type="text" name="memberAddress" placeholder="우편번호" maxlength="6" id="postcode">                       
+          <input type="text" name="memberAddress" 
+          placeholder="우편번호" maxlength="6" id="postcode" readonly>                       
           
           <button type="button" id="searchAddress">검색</button>
         </div>
 
         <div class="signUp-input-area">
-          <input type="text" name="memberAddress" placeholder="도로명/지번 주소" id="address">
+          <input type="text" name="memberAddress" 
+          placeholder="도로명/지번 주소" id="address">
         </div>
 
         <div class="signUp-input-area">
-          <input type="text" name="memberAddress" placeholder="상세 주소" id="detailAddress">
+          <input type="text" name="memberAddress" 
+          placeholder="상세 주소" id="detailAddress">
         </div>
 
         <button id="signUpBtn">가입하기</button>
@@ -120,6 +123,7 @@
   <th:block th:replace="~{common/footer}"></th:block>
 
   <!-- 다음 주소 API 추가 -->
+  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
   <!-- 회원 가입 JS 추가 -->
   <script src="/js/member/signup.js"></script> 

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+
+	<h1>조회 결과</h1>
+
+	<h4 th:text="|${memberName}님|"></h4>
+	<h4 th:text="${memberAge}+세"></h4>
+	<h4 th:text="${memberAddress}"></h4>
+	
+	<h4 th:text="${param.name}"></h4>
+	<h4 th:text="${param.age}"></h4>
+	<h4 th:text="${param.addr}"></h4>
+
+</body>
+</html>
