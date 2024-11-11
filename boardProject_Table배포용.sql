@@ -82,9 +82,22 @@ AND MEMBER_EMAIL = 'user02@kh.or.kr';
 
 
 -- 닉네임 중복검사
+SELECT COUNT(*)
+FROM "MEMBER"
+WHERE MEMBER_DEL_FL = 'N'
+AND MEMBER_NICKNAME = '김삼삼';
 
 
+SELECT MEMBER_PW
+FROM "MEMBER"
+WHERE MEMBER_NO = '2';
 
+-- 탈퇴한 회원 다시 복구
+UPDATE "MEMBER" SET
+MEMBER_DEL_FL = 'N'
+WHERE MEMBER_NO = 2;
+
+COMMIT;
 
 -----------------------------------------
 
