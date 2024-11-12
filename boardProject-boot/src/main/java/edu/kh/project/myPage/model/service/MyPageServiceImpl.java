@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(rollbackFor = Exception.class) // 모든 예외 발생 시 롤백 / 아니면 커밋
 @RequiredArgsConstructor
 @Slf4j
+@PropertySource("classpath:/config.properties")
 public class MyPageServiceImpl implements MyPageService{
 
 	private final MyPageMapper mapper;
@@ -27,6 +30,11 @@ public class MyPageServiceImpl implements MyPageService{
 	// BCrypt 암호화 객체 의존성 주입(SecurityConfig 참고)
 	private final BCryptPasswordEncoder bcrypt;
 	
+	@Value("${my.profile.web-path}")
+	private String profileWebPath; // /myPage/profile/
+	
+	@Value("${my.profile.folder-path}")
+	private String profileFolderPath; // C:/uploadFiles/profile/
 	
 	
 	// 회원 정보 수정
@@ -256,8 +264,56 @@ public class MyPageServiceImpl implements MyPageService{
 		return result1 + result2;
 	}
 	
-	
-	
+	// 프로필 이미지 변경 서비스
+	@Override
+	public int profile(MultipartFile profileImg, Member loginMember) throws Exception {
+		
+		// 프로필 이미지 경로 (수정할 경로)
+		String updatePath = null;
+		
+		// 변경명 저장
+		String rename = null;
+		
+		// 업로드한 이미지가 있을 경우
+		// - 있을 경우 : 경로 조합 (클라이언트 접근 경로 + 리네임파일명)
+		if( !profileImg.isEmpty() ) {
+			// updatePath 경로 조합
+			
+			// 1. 파일명 변경
+			rename = Utility.fileRename(profileImg.getOriginalFilename());
+			
+			// 2. /myPage/profile/변경된파일명
+			updatePath = profileWebPath + rename;
+		}
+		
+		// 수정된 프로필 이미지 경로 + 회원 번호를 저장할 DTO 객체
+		Member mem = Member.builder()
+					.memberNo(loginMember.getMemberNo())
+					.profileImg(updatePath)
+					.build();
+		
+		// UPDATE 수행
+		int result = mapper.profile(mem);
+		
+		if(result > 0) { // DB에 수정 성공
+			
+			// 프로필 이미지를 없앤 경우(NULL로 수정한 경우)를 제외
+			// -> 업로드한 이미지가 있을 경우
+			if( !profileImg.isEmpty() ) {
+				// 파일을 서버 지정된 폴더에 저장
+				profileImg.transferTo(new File(profileFolderPath + rename));
+							//  C:/uploadFiles/profile/변경한이름
+			}
+			
+			// 세션 회원 정보에서 프로필 이미지 경로를
+			// 업데이트한 경로로 변경
+			loginMember.setProfileImg(updatePath);
+			
+		}
+		
+		
+		return result;
+	}
 	
 	
 	

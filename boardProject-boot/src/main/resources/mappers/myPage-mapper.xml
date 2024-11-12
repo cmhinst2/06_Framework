@@ -52,8 +52,12 @@
 	</select>
 	
 	
-	
-	
+	<!-- 프로필 이미지 변경 -->
+	<update id="profile">
+		UPDATE "MEMBER" SET
+		PROFILE_IMG = #{profileImg}
+		WHERE MEMBER_NO = #{memberNo}
+	</update>
 	
 	
 	

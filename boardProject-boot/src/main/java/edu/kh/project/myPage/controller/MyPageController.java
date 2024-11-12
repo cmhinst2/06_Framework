@@ -372,7 +372,31 @@ public class MyPageController {
 	}
 	
 	
-	
+	/** 프로필 이미지 변경
+	 * @param profileImg
+	 * @param loginMember
+	 * @param ra
+	 * @return
+	 */
+	@PostMapping("profile")
+	public String profile( @RequestParam("profileImg") MultipartFile profileImg,
+						@SessionAttribute("loginMember") Member loginMember,
+						RedirectAttributes ra ) throws Exception {
+		
+		// 서비스 호출
+		int result = service.profile(profileImg, loginMember);
+		
+		String message = null;
+		
+		if(result > 0) message = "변경 성공!";
+		else			message = "변경 실패ㅠㅠ";
+		
+		ra.addFlashAttribute("message", message);
+		
+		
+		return "redirect:profile"; // 리다이렉트 - /myPage/profile GET 요청 (상대경로)
+		
+	}
 	
 	
 	
