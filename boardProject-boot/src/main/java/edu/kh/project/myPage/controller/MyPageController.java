@@ -1,5 +1,6 @@
 package edu.kh.project.myPage.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.kh.project.member.model.dto.Member;
+import edu.kh.project.myPage.model.dto.UploadFile;
 import edu.kh.project.myPage.model.service.MyPageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -97,15 +99,8 @@ public class MyPageController {
 	//파일 업로드 테스트 화면 이동
 	@GetMapping("fileTest") //   /myPage/fileTest  GET 방식 요청
 	public String fileTest() {
-		return "myPage/myPage-fileTest";
+		return "myPage/myPage-fileTest"; // forward 
 	}
-	
-	//파일 목록 조회 화면 이동
-	@GetMapping("fileList") //   /myPage/fileList  GET 방식 요청
-	public String fileList() {
-		return "myPage/myPage-fileList";
-	}
-	
 	
 
 	/**회원 정보 수정
@@ -278,16 +273,103 @@ public class MyPageController {
 							) throws Exception{
 		
 		String path = service.fileUpload1(uploadFile);
+					// /myPage/file/유리.jpg
+		// path = /myPage/file/유리.jpg 
 		
 		// 파일이 저장되어 웹에서 접근할 수 있는 경로가 반환되었을 때
 		if( path != null ) {
 			ra.addFlashAttribute("path", path);
+			// ra -> RedirectAttributes (리다이렉트 시 request scope 값 전달 객체)
 		}
 		
 		
-		return "redirect:/myPage/fileTest";
+		return "redirect:/myPage/fileTest";  // /myPage/fileTest  (GET 요청)
 	}
 	
+	@PostMapping("file/test2")
+	public String fileUpload2( @RequestParam("uploadFile") MultipartFile uploadFile,
+								@SessionAttribute("loginMember") Member loginMember,
+								RedirectAttributes ra ) throws Exception {
+		
+		// 로그인한 회원의 번호 얻어오기 (누가 업로드 했는가)
+		int memberNo = loginMember.getMemberNo();
+		
+		// 업로드된 파일 정보를 DB에 INSERT 후 결과 행의 개수 반환 받을 예정
+		int result = service.fileUpload2(uploadFile, memberNo);
+		
+		String message = null;
+		
+		if(result > 0) {
+			message = "파일 업로드 성공";
+		} else {
+			message = "파일 업로드 실패...";
+		}
+		
+		ra.addFlashAttribute("message", message);
+		
+		return "redirect:/myPage/fileTest"; // /myPage/fileTest GET 방식 재요청
+		
+	}
+	
+	
+
+	//파일 목록 조회 화면 이동
+	/** 파일 목록 조회하여 응답화면으로 이동
+	 * @param model : 값 전달용 객체 (기본 request scope)
+	 * @param loginMember : 현재 로그인한 회원의 정보
+	 * @return 
+	 */
+	@GetMapping("fileList") //   /myPage/fileList  GET 방식 요청
+	public String fileList(Model model, 
+						@SessionAttribute("loginMember") Member loginMember ) {
+		
+		// 파일 목록 조회 서비스 호출(현재 로그인한 회원이 올린 이미지만)
+		int memberNo = loginMember.getMemberNo();
+		List<UploadFile> list = service.fileList(memberNo);
+		
+		// model 에 list 담아서 forward
+		model.addAttribute("list", list);
+		
+		// templates/myPage/myPage-fileList.html 
+		return "myPage/myPage-fileList";
+	}
+	
+	
+	@PostMapping("file/test3")
+	public String fileUpload3( @RequestParam("aaa") List<MultipartFile> aaaList,
+								@RequestParam("bbb") List<MultipartFile> bbbList,
+								@SessionAttribute("loginMember") Member loginMember,
+								RedirectAttributes ra ) throws Exception {
+		
+		// aaa 파일 미제출 시
+		// -> 0번, 1번 인덱스 파일이 모두 비어있음
+		
+		// bbb(multiple) 파일 미제출 시
+		// -> 0번 인덱스 파일이 비어있음
+		
+		//log.debug("aaaList: " + aaaList);
+		//log.debug("bbbList: " + bbbList);
+		
+		// 여러 파일 업로드 서비스 호출
+		int memberNo = loginMember.getMemberNo();
+		
+		int result = service.fileUpload3(aaaList, bbbList, memberNo);
+		// result == 업로드된 파일 개수
+		
+		String message = null;
+		
+		if(result == 0) {
+			message = "업로드된 파일이 없습니다";
+			
+		} else {
+			message = result + "개의 파일이 업로드 되었습니다!";
+			
+		}
+		
+		ra.addFlashAttribute("message", message);
+		
+		return "redirect:/myPage/fileTest";
+	}
 	
 	
 	

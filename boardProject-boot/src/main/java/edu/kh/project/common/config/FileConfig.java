@@ -56,7 +56,7 @@ public class FileConfig implements WebMvcConfigurer{
 		// 클라이언트가 /myPage/file/** 패턴으로 이미지를 요청할 때
 		// 서버 폴더 경로 중 file:///C:/uploadFiles/test/  로 연결하겠다 
 		
-		
+
 	}
 	
 	
