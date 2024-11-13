@@ -400,7 +400,7 @@ COMMIT;
 
 ---------------------------------------------
 /* 게시글 번호 시퀀스 생성 */
-CREATE SEQUENCE SEQ_BOARD_NO NOCACHE;
+CREATE SEQUENCE SEQ_BOARD_NO NOCACHE; -- 여기까지 수행(11/13)
 
 /* 게시판(BOARD) 테이블 샘플 데이터 삽입(PL/SQL)*/
 SELECT * FROM "MEMBER"; -- 존재하는 회원 중 하나로 진행
