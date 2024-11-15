@@ -119,14 +119,129 @@ if(loginForm != null) { // 로그인 안된 상태일때
 
 /* 회원 목록 조회(비동기) */
 
+// 조회 버튼
+const selectMemberList = document.querySelector("#selectMemberList");
+
+// tbody
+const memberList = document.querySelector("#memberList");
+
+// td 요소를 만들고 text 추가 후 반환
+const createTd = (text) => {
+	const td = document.createElement("td");
+	td.innerText = text;
+	return td; // <td>1</td> // <td>user01@kh.or.kr</td> // <td>유저일</td> // <td>N</td>
+}
+
+
+// 조회 버튼 클릭 시
+selectMemberList.addEventListener("click", () => {
+
+	// 1) 비동기로 회원 목록 조회
+	//   (포함될 회원 정보 : 회원번호, 이메일, 닉네임, 탈퇴여부)
+
+	fetch("/member/selectMemberList")
+		.then(response => response.json()) // JSON.parse(response)
+		.then(list => {
+
+			console.log(list);
+
+			// 이전 내용 삭제
+			memberList.innerHTML = "";
+
+			// tbody에 들어갈 요소를 만들고 값 세팅 후 추가
+			list.forEach((member, index) => {
+				// member : 현재 반복 접근 중인 요소
+				// index : 현재 접근중인 인덱스
+
+				// tr 만들어서 그 안에 td 만들고, append후
+				// tr을 tbody에 append
+
+				const keyList = ['memberNo', 'memberEmail', 'memberNickname', 'memberDelFl'];
+
+				const tr = document.createElement("tr");
+
+				keyList.forEach(key => tr.append(createTd(member[key])));
+
+				// tbody 자식으로  tr 추가
+				memberList.append(tr);
+			});
+		})
+});
 
 // -------------------------------------------------------
 
 /* 특정 회원 비밀번호 초기화 */
+const resetMemberNo = document.querySelector("#resetMemberNo");
+const resetPw = document.querySelector("#resetPw");
+
+resetPw.addEventListener("click", () => {
+
+	// 입력 받은 회원 번호 얻어오기
+	const inputNo = resetMemberNo.value;
+
+	if (inputNo.trim().length == 0) {
+		alert("회원 번호 입력해주세요");
+		return;
+	}
+
+	fetch("/member/resetPw", {
+		method: "PUT", // PUT : 수정 요청 방식
+		headers: { "Content-Type": "application/json" },
+		body: inputNo
+	})
+		.then(resp => resp.text())
+		.then(result => {
+			// result == 컨트롤러로부터 반환받아 TEXT 로 파싱한 값
+			// "1", "0"
+
+			if (result > 0) {
+				alert("초기화 성공!");
+
+			} else {
+				alert("해당 회원이 존재하지 않습니다 :-(");
+
+			}
+		});
+});
+
 
 
 // -------------------------------------------------------
 
 /* 특정 회원 탈퇴 복구 */
+const restorationBtn = document.querySelector("#restorationBtn");
+const restorationMemberNo = document.querySelector("#restorationMemberNo");
+
+
+restorationBtn.addEventListener("click", () => {
+	// 입력 받은 회원 번호 얻어오기
+	const inputNo = restorationMemberNo.value;
+
+	if (inputNo.trim().length == 0) {
+		alert("회원 번호 입력해주세요");
+		return;
+	}
+
+	fetch("/member/restoreMember", {
+		method: "PUT", // PUT : 수정 요청 방식
+		headers: { "Content-Type": "application/json" },
+		body: inputNo
+	})
+		.then(resp => resp.text())
+		.then(result => {
+			// result == 컨트롤러로부터 반환받아 TEXT 로 파싱한 값
+			// "1", "0"
+			
+			if (result > 0) {
+				alert("복구 성공!");
+
+			} else {
+				alert("해당 회원이 존재하지 않습니다 :-(");
+
+			}
+		});
+});
+
+
 
 
