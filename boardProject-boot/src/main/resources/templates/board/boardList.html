@@ -70,7 +70,8 @@
 									
 									
 									<!-- 검색 X -->
-									<a th:unless="${param.key}"
+									<a 
+									th:unless="${param.key}"
 									th:href="@{/board/{boardCode}/{boardNo} (boardCode=${boardCode}, boardNo=*{boardNo}, cp=${pagination.currentPage})}"
 									th:text="*{boardTitle}">게시글 제목</a>
 		

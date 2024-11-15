@@ -94,8 +94,9 @@ WHERE MEMBER_NO = '2';
 
 -- 탈퇴한 회원 다시 복구
 UPDATE "MEMBER" SET
-MEMBER_DEL_FL = 'N'
+MEMBER_DEL_FL = 'Y'
 WHERE MEMBER_NO = 2;
+
 
 COMMIT;
 
@@ -487,7 +488,10 @@ SELECT SYSDATE
 FROM DUAL;
 
 
-
+SELECT COUNT(*)
+FROM "BOARD"
+WHERE BOARD_DEL_FL = 'N'
+AND BOARD_CODE = 1;
 
 
 
@@ -542,28 +546,31 @@ CREATE SEQUENCE SEQ_IMG_NO NOCACHE;
 
 /* BOARD_IMG 테이블에 샘플 데이터 삽입 */
 INSERT INTO "BOARD_IMG" VALUES(
-	SEQ_IMG_NO.NEXTVAL, '/images/board/', '원본1.jpg', 'test1.jpg', 0, 1998
+	SEQ_IMG_NO.NEXTVAL, '/images/board/', '원본1.jpg', 'test1.jpg', 0, 2001
 );
 
 INSERT INTO "BOARD_IMG" VALUES(
-	SEQ_IMG_NO.NEXTVAL, '/images/board/', '원본2.jpg', 'test2.jpg', 1, 1998
+	SEQ_IMG_NO.NEXTVAL, '/images/board/', '원본2.jpg', 'test2.jpg', 1, 2001
 );
 
 INSERT INTO "BOARD_IMG" VALUES(
-	SEQ_IMG_NO.NEXTVAL, '/images/board/', '원본3.jpg', 'test3.jpg', 2, 1998
+	SEQ_IMG_NO.NEXTVAL, '/images/board/', '원본3.jpg', 'test3.jpg', 2, 2001
 );
 
 INSERT INTO "BOARD_IMG" VALUES(
-	SEQ_IMG_NO.NEXTVAL, '/images/board/', '원본4.jpg', 'test4.jpg', 3, 1998
+	SEQ_IMG_NO.NEXTVAL, '/images/board/', '원본4.jpg', 'test4.jpg', 3, 2001
 );
 
 INSERT INTO "BOARD_IMG" VALUES(
-	SEQ_IMG_NO.NEXTVAL, '/images/board/', '원본5.jpg', 'test5.jpg', 4, 1998
+	SEQ_IMG_NO.NEXTVAL, '/images/board/', '원본5.jpg', 'test5.jpg', 4, 2001
 );
 
 
 COMMIT;
 
+SELECT * FROM "BOARD_IMG";
+
+-- 게시글 상세조회
 
 -------------------------------------------------------
 
