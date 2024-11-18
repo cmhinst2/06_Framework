@@ -14,7 +14,11 @@
     <main>
         <th:block th:replace="~{common/header}"></th:block>
 
-        <!-- <form th:action="@{/editBoard/{boardCode}/insert(boardCode=${boardCode})}"  -->
+        <!-- 절대 경로 작성법 : <form th:action="@{/editBoard/{boardCode}/insert(boardCode=${boardCode})}"  -->
+			<!-- 현재 위치 : /editBoard/1/insert 
+				상대 경로 : insert
+				목표 경로 : /editBoard/1/insert (POST)
+			-->
         <form action="insert"
             method="POST"  class="board-write" id="boardWriteFrm" 
             enctype="multipart/form-data">

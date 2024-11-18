@@ -1,148 +1,123 @@
-/* 선택된 이미지 미리보기 */
+/* 선택된 이미지 미리보기 관련 요소 모두 얻어오기 */
+
 const previewList = document.querySelectorAll(".preview"); // img 태그 5개
 const inputImageList = document.querySelectorAll(".inputImage"); // input 태그 5개
 const deleteImageList = document.querySelectorAll(".delete-image"); // x버튼 5개
 
+// 마지막으로 선택된 파일을 저장할 배열
+const lastValidFiles = [null, null, null, null, null];
 
 
-// 이미지 선택 이후 취소를 누를 경우를 대비한 백업 이미지
-// (백업 원리 -> 복제품으로 기존 요소를 대체함)
-const backupInputList = new Array(inputImageList.length);
-
-
-/* ***** input 태그 값 변경 시(파일 선택 시) 실행할 함수 ***** */
-/**
- * @param inputImage : 파일이 선택된 input 태그
- * @param order : 이미지 순서
+/** 미리보기 함수
+ * @param  file : <input type="file"> 에서 선택된 파일
+ * @param  order : 이미지 순서
  */
-const changeImageFn = (inputImage, order) => {
+const updatePreview = (file, order) => {
 
-  // byte단위로 10MB 지정
-  const maxSzie = 1024 * 1024 * 10;
+  // 선택된 파일이 지정된 크기를 초과한 경우 선택 막기
+  const maxSize = 1024 * 1024 * 10; // 10MB를 byte 단위로 작성
 
-  // 업로드된 파일 정보가 담긴 객체를 얻어와 변수에 저장
-  const file = inputImage.files[0];
+  if(file.size > maxSize){ // 파일 크기 초과 시
+    alert("10MB 이하의 이미지만 선택해 주세요");
 
+    // 미리보기는 안되어도 크기가 초과된 파일이 선택되어 있음!!
 
-  // ------------- 파일 선택 -> 취소 해서 파일이 없는 경우 ----------------
-  if(file == undefined){
-    console.log("파일 선택 취소됨");
-
-    // 같은 순서(order)번째 backupInputList 요소를 얻어와 대체하기
-
-    /* 한 번 화면에 추가된 요소는 재사용(다른 곳에 또 추가) 불가능 */
-
-    // 백업본을 한 번 더 복제
-    const temp = backupInputList[order].cloneNode(true);
-
-    inputImage.after(temp); // 백업본을 다음 요소로 추가
-    inputImage.remove();    // 원본을 삭제
-    inputImage = temp;      // 원본 변수에 백업본을 참조할 수 있게 대입
-
-    // 백업본에 없는 이벤트 리스너를 다시 추가
-    inputImage.addEventListener("change", e => {
-      changeImageFn(e.target, order);
-    })
-
-    return;
-  }
-
-
-  // ---------- 선택된 파일의 크기가 최대 크기(maxSize) 초과 ---------
-
-  if(file.size > maxSzie){
-    alert("10MB 이하의 이미지를 선택해주세요");
-
-     // ------------------------------------------
-    // 해당 순서의 backup 요소가 없거나, 
-    // 요소는 있는데 값이 없는 경우 == 아무 파일도 선택된적 없을 때
-    if(backupInputList[order] == undefined
-        || backupInputList[order].value == ''){
-
-      inputImage.value = ""; // 잘못 업로드된 파일 값 삭제
+    // 이전 선택된 파일이 없는데 크기 초과 파일을 선택한 경우
+    if(lastValidFiles[order] === null){
+      inputImageList[order].value = ""; // 선택 파일 삭제
       return;
     }
 
-    // 이전에 정상 선택 -> 다음 선택에서 이미지 크기 초과한 경우
-    // 백업본을 한 번 더 복제
-    const temp = backupInputList[order].cloneNode(true);
-
-    inputImage.after(temp); // 백업본을 다음 요소로 추가
-    inputImage.remove();    // 원본을 삭제
-    inputImage = temp;      // 원본 변수에 백업본을 참조할 수 있게 대입
- 
-    // 백업본에 없는 이벤트 리스너를 다시 추가
-    inputImage.addEventListener("change", e => {
-     changeImageFn(e.target, order);
-    })
-
+    // 이전 선택된 파일이 있는데 크기 초과 파일을 선택한 경우
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(lastValidFiles[order]);
+	// 이전에 유효했던 파일을 저장한 배열(lastValidFiles)에서 특정 순서(order)의 파일을 꺼내어 추가함
+    inputImageList[order].files = dataTransfer.files;
+	// DataTransfer 객체에 추가된 파일 리스트를 input태그(파일) 리스트에 대입
+	
     return;
   }
 
+  // 파일 크기 초과 안했을 때 (유효한 크기인 경우)
+  // 현재 선택된 이미지 백업(기록해두기)
+  lastValidFiles[order] = file;
 
-  // ------------ 선택된 이미지 미리보기 --------------
-
-  const reader = new FileReader(); // JS에서 파일을 읽고 저장하는 객체
-
-  // 선택된 파일을 JS로 읽어오기 -> reader.result 변수에 저장됨
-  reader.readAsDataURL(file);
-
-  reader.addEventListener("load", e => {
-    const url = e.target.result;
-
-    // img 태그(.preview)에 src 속성으로 url 값을 대입
-    previewList[order].src = url;
-
-    // 같은 순서 backupInputList에 input태그를 복제해서 대입
-    backupInputList[order] = inputImage.cloneNode(true);
-  });
-
+  // 현재 선택 파일 임지 URL 생성 후 미리보기 img 태그에 대입
+  const newImageUrl = URL.createObjectURL(file) // 임시 URL 생성
+  previewList[order].src = newImageUrl; // 미리보기 img 태그에 대입
+  
 }
 
 
 
+// ----------------------------------------------------------------
 
+/* input태그, x버튼에 이벤트 리스너 추가 */
+for (let i = 0; i < inputImageList.length; i++) {
 
-for(let i=0 ; i<inputImageList.length ; i++){
-
-  // **** input태그에 이미지가 선택된 경우(값이 변경된 경우) ****
+  // input 태그에 이미지 선택 시 미리보기 함수 호출
   inputImageList[i].addEventListener("change", e => {
-    changeImageFn(e.target, i);
+    const file = e.target.files[0];
+
+    if (file === undefined) { // 선택 취소 시
+
+      // 이전에 선택한 파일이 없는 경우
+      if (lastValidFiles[i] === null) return;
+
+
+      //***  이전에 선택한 파일이 "있을" 경우 (== 이전에 정상 선택 후 재선택을 취소하는 경우) ***
+      const dataTransfer = new DataTransfer();
+
+      // DataTransfer가 가지고 있는 files 필드에 
+      // lastValidFiles[i] 추가 
+      dataTransfer.items.add(lastValidFiles[i]);
+
+      // input의 files 변수에 lastVaildFile이 추가된 files 대입
+      inputImageList[i].files = dataTransfer.files;
+
+      // 이전 선택된 파일로 미리보기 되돌리기
+      updatePreview(lastValidFiles[i], i); 
+
+      return;
+    }
+
+	// 파일을 재선택한 경우 updatePreview 이용하여 업데이트
+    updatePreview(file, i);
   })
 
 
-  // **** x 버튼 클릭 시 ****
+
+  /* X 버튼 클릭 시 미리보기, 선택된 파일 삭제 */
   deleteImageList[i].addEventListener("click", () => {
 
-    // img, input, backup의 인덱스가 모두 일치한다는 특징을 이용
-
-    previewList[i].src       = ""; // 미리보기 이미지 제거
-    inputImageList[i].value  = ""; // input에 선택된 파일 제거
-    backupInputList[i].value = ""; // 백업본 제거
-  });
-
-}
+    previewList[i].src      = ""; // 미리보기 삭제
+    inputImageList[i].value = ""; // 선택된 파일 삭제
+    lastValidFiles[i]       = null; // 백업 파일 삭제
+  })
 
 
-// 작성 폼 유효성 검사
-document.querySelector("#boardWriteFrm")
-  .addEventListener("submit", e => {
+} // for end
 
-  const boardTitle = document.querySelector("[name='boardTitle']");
-  const boardContent = document.querySelector("[name='boardContent']");
 
-  if(boardTitle.value.trim().length == 0){
-    alert("제목을 작성해 주세요");
+/* 제목, 내용 미작성 시 제출 불가 */
+const form = document.querySelector("#boardWriteFrm");
+form.addEventListener("submit", e => {
+
+  // 제목, 내용 input 얻어오기
+  const boardTitle   = document.querySelector("[name=boardTitle]");
+  const boardContent = document.querySelector("[name=boardContent]");
+
+  if(boardTitle.value.trim().length === 0){
+    alert("제목을 작성해주세요");
     boardTitle.focus();
     e.preventDefault();
     return;
   }
 
-  if(boardContent.value.trim().length == 0){
-    alert("내용을 작성해 주세요");
+  if(boardContent.value.trim().length === 0){
+    alert("내용을 작성해주세요");
     boardContent.focus();
     e.preventDefault();
     return;
   }
-
-});
+})
