@@ -1,4 +1,3 @@
-console.log("test");
 /* REST(REpresentational State Transfer)  API
 
 - 자원(데이터,파일)을 이름(주소)으로 

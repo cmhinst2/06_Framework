@@ -31,11 +31,11 @@
 					<div class="comment-btn-area">
 						<button th:onclick="|showInsertComment(*{commentNo}, this)|">답글</button>
 	
+						<!-- 로그인이 되어있는 상태고, 로그인 회원과 댓글 작성자가 같은 경우 -->
 						<th:block th:if="${session.loginMember != null and session.loginMember.memberNo == comment.memberNo}">
 							<button th:onclick="|showUpdateComment(*{commentNo}, this)|">수정</button>
 							<button th:onclick="|deleteComment(*{commentNo})|">삭제</button>
 						</th:block>
-						<!-- 로그인 회원과 댓글 작성자가 같은 경우 -->
 	
 					</div>
 				</th:block>

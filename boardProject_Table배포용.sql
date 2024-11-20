@@ -676,27 +676,28 @@ ORDER SIBLINGS BY COMMENT_NO;
 
 /* 좋아요 테이블(BOARD_LIKE) 샘플 데이터 추가 */
 INSERT INTO "BOARD_LIKE"
-VALUES(1, 2001); -- 1번 회원이 1998번 글에 좋아요를 클릭함
+VALUES(2, 2003); -- 2번 회원이 2003번 글에 좋아요를 클릭함
 
 COMMIT;
+
+
+-- 좋아요 여부 확인 (1 : 눌렀다 / 0 : 안눌렀다)
+SELECT COUNT(*) FROM "BOARD_LIKE"
+WHERE MEMBER_NO = 2
+AND BOARD_NO = 2002;
 
 ----------------------------------------------------------
 
 INSERT INTO "BOARD_IMG" 
 (
-	SELECT SEQ_IMG_NO.NEXTVAL, '경로1', '원본1', '변경1', 1, 2001 FROM DUAL
+	SELECT NEXT_IMG_NO(), '경로1', '원본1', '변경1', 1, 2001 FROM DUAL
 	UNION
-	SELECT SEQ_IMG_NO.NEXTVAL, '경로2', '원본2', '변경2', 2, 2001 FROM DUAL
+	SELECT NEXT_IMG_NO(), '경로2', '원본2', '변경2', 2, 2001 FROM DUAL
 	UNION
-	SELECT SEQ_IMG_NO.NEXTVAL, '경로3', '원본3', '변경3', 3, 2001 FROM DUAL
+	SELECT NEXT_IMG_NO(), '경로3', '원본3', '변경3', 3, 2001 FROM DUAL
 );
 
-
-
-
-
-
-
+SELECT * FROM "BOARD_IMG";
 
 
 -- SEQ_IMG_NO 시퀀스의 다음 값을 반환하는 함수 생성
@@ -716,6 +717,7 @@ BEGIN
 END;
 -- 여기까지 긁기
 
+SELECT NEXT_IMG_NO() FROM DUAL;
 
 
 
