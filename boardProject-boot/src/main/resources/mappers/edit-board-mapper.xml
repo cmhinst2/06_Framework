@@ -72,6 +72,50 @@
 		</foreach>
 		
 	</insert>
+	
+	<!-- 게시글 부분 수정 (제목/내용) -->
+	<update id="boardUpdate">
+		UPDATE "BOARD" SET
+		BOARD_TITLE = #{boardTitle},
+		BOARD_CONTENT = #{boardContent}
+		WHERE BOARD_CODE = #{boardCode}
+		AND BOARD_NO = #{boardNo}
+		AND MEMBER_NO = #{memberNo}
+	</update>
+	
+	<!--  게시글 이미지 삭제 
+		#{} : 해당 컬럼 자료형에 맞는 리터럴로 변환 ''
+		${} : sql에 값 그대로 추가 ('' 존재 X)
+	-->
+	<delete id="deleteImage">
+		DELETE FROM "BOARD_IMG"
+		WHERE IMG_ORDER IN (${deleteOrderList})
+		AND BOARD_NO = #{boardNo}
+	</delete>
+	
+	
+	<!-- 게시글 이미지 수정 -->
+	<update id="updateImage">
+		UPDATE "BOARD_IMG" SET
+		IMG_ORIGINAL_NAME = #{imgOriginalName},
+		IMG_RENAME = #{imgRename}
+		WHERE BOARD_NO = #{boardNo}
+		AND IMG_ORDER = #{imgOrder}
+	</update>
+	
+	
+	<!--  게시글 이미지 삽입 (1행) -->
+	<insert id="insertImage">
+		INSERT INTO "BOARD_IMG"
+		VALUES(NEXT_IMG_NO(),
+				#{imgPath},
+				#{imgOriginalName},
+				#{imgRename},
+				#{imgOrder},
+				#{boardNo})
+	</insert>
+	
+	
 
 
 
