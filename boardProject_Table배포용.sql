@@ -56,6 +56,7 @@ COMMIT;
 SELECT * FROM "MEMBER";
 
 
+
 -- 회원 1번 유저일 암호화된 비밀번호로 업데이트(pass01!)
 UPDATE "MEMBER" SET
 MEMBER_PW = '$2a$10$mQuTt31FyF3uXL2qAkF21eZsPnoQP6zeo9pKCevmsWtGJEOsKtFhu'

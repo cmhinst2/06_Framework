@@ -84,9 +84,12 @@ if(deleteBtn != null){
       return;
     }
 
-    const url = location.pathname.replace("board","editBoard") + "/delete"; // /editBoard/1/2000/delete
+    const url = location.pathname.replace("board","editBoard") + "/delete"; 
+	// /board/2/1997?cp=1
+	
     const queryString = location.search; // ? cp=1
-    location.href = url + queryString;
+    location.href = url + queryString; 
+	//   /editBoard/2/1997/delete?cp=1
   });
 }
 
